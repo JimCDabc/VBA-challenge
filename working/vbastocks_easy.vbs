@@ -55,7 +55,7 @@ Sub vbaStocks_easy_main()
     'MsgBox "Last Row: [" & lastRow & "]"
 
     ' set first opening value
-    openValue = ws.Cells(2, openCol)
+    'openValue = ws.Cells(2, openCol)
 
     ' Loop through all credit card purchases
     For i = 2 To lastRow
@@ -70,7 +70,7 @@ Sub vbaStocks_easy_main()
             newStock = False
             runningVolume = 0
             percentChange = 0
-            closeValue = 0
+            'closeValue = 0
 
             ' intialize curent stock name and opening value
             tickerName = ws.Cells(i, nameCol).Value    ' current stock ticker name
@@ -88,9 +88,13 @@ Sub vbaStocks_easy_main()
             ' Add final row volume to the Running Volume Total
             runningVolume = runningVolume + ws.Cells(i, volCol).Value
             ' Calculate % change in volume
-            closeValue = ws.Cells(i, closeCol)
-            percentChange = (closeValue - openValue) / openValue
-
+            'closeValue = ws.Cells(i, closeCol)
+            'If (openValue <> 0) Then
+            '    percentChange = (closeValue - openValue) / openValue
+            'Else
+            '    percentChange = 0
+            'End If
+            
             ' set the TickerName in the Summary Table
             ws.Range(sumTickerCol & summaryRow).Value = tickerName
             ' set the Total Volume to the Summary Table
@@ -171,6 +175,8 @@ Sub myDebugMsg1(ws As Worksheet, ByVal prevRow As Long, ByVal curRow As Long)
                 & " | " & Str(ws.Cells(curRow, 7))
     End If
 End Sub
+
+
 
 
 
