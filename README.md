@@ -13,9 +13,10 @@ Contains deliverbles for DABC week 2 homework
 * vbastocks_moderate.png:  Snap of Excel for moderate challenge run on Multiple_year_stock.data
 * vbastocks_hard.png:  snap of Excel for hard challenge run on Multiple_year_stock.data
 
-### Directory: VBA-Challenge / working directory
+### Directory: VBA-Challenge / working
 
 Working area for the homework.  Not for grading
+
 When complete these scripts are moved to the VBAStocks deliverables folder for grading
 
 ### Directory: VBA-Challenge / test
