@@ -15,7 +15,7 @@ Contains deliverbles for DABC week 2 homework
 ### Sub-directory: ~/VBAStocks/Images
 
 All images reflect runs on Multiple_year_stock_data.xlsx.  
-Filenames marked by "easy", "moderate", and "hard" challenges.
+Filenames marked by "easy", "moderate", and "hard" challenges.  
 Some images reflect top of sheet.  Others reflect end of data of sheet.
 
 * Easy
