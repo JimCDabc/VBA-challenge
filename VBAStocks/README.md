@@ -2,17 +2,17 @@
 
 Github repository for DABC week 2 VBA homework for Jim C
 
-## Directory: VBA-Challenge / VBStocks directory
+## Directory: /VBA-Challenge/VBStocks 
 
 Contains deliverbles for DABC week 2 homework
 
-### Scripts
+### Script Files (at ~/VBAStocks directory level)
 
-* vbastocks_easy.vbs:  Script for easy solution
-* vbastocks_moderate.vbs: Script for moderate challenge solution
-* vbastocks_final.vbs:  Script for final soluton (hard challenge & final scripts)
+* vbastocks_easy.vbs:  VBA Script for Easy solution
+* vbastocks_moderate.vbs: VBA Script for Moderate challenge solution
+* vbastocks_final.vbs:  VBA Script for Hard challenge soluton (final scripts)
 
-#### ./Images sub-directory
+### Sub-directory: ~/VBAStocks/Images
 
 All images reflect runs on Multiple_year_stock_data.xlsx.  
 Filenames marked by "easy", "moderate", and "hard" challenges.
