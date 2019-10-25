@@ -34,7 +34,7 @@ Sub vbaStocks_easy_main()
     Dim ws As Worksheet
     Set ws = ThisWorkbook.ActiveSheet
     
-    ' Defin column headers and locations of data and summary
+    ' Define column headers and locations of data and summary
     Call defTableColsByRef(ws, _
                     sumTickerCol, sumPercentCol, sumTotalVolCol, sumYearlyChgCol, _
                     nameCol, openCol, closeCol, volCol)
@@ -62,20 +62,15 @@ Sub vbaStocks_easy_main()
     'find the last row of values in the sheet
     Dim lastRow As Long
     lastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
-    'MsgBox "Last Row: [" & lastRow & "]"
 
-    ' set first opening value
-    openValue = ws.Cells(2, openCol)
-
-    ' Loop through all credit card purchases. First row is a new stock
+    ' first row of data is a new stock.  initialize the flag
     newStock = True
+
+    ' Loop through all stock daily rows. 
     For i = 2 To lastRow
 
         ' if new stock detected, set the tracking values
         If (newStock) Then
-            ' debug message to print previous and current row info
-            ' Call myDebugMsg1(ws, (i - 1), i)
-            
             ' Reset the summary & tracking values
             newStock = False
             runningVolume = 0
@@ -101,15 +96,15 @@ Sub vbaStocks_easy_main()
             ' Calculate % change in volume
             closeValue = ws.Cells(i, closeCol)
             yearlyChange = closeValue - openValue
-            percentChange = yearlyChange / openValue
 
-            'debug check for a div/0 error with open value
-            'debug If (openValue <> 0) Then
-            'debug   percentChange = yearlyChange / openValue
-            'debug Else
-            'debug   msgbox "opening value is 0 for stock [" & tickerName & "]"
-            'debug   percentChange = 0
-            'debug End If
+            'check for a div/0 error with open value
+            If (openValue <> 0) Then
+              percentChange = yearlyChange / openValue
+            Else
+               ' MsgBox "opening value is 0 for stock [" & tickerName & "]"
+               percentChange = 0
+            End If
+             
             'debug check for closeValue = 0
             'debug If (closeValue = 0) Then
             'debug    MsgBox "closing value is 0 for stock [" & tickerName & "]"
@@ -121,14 +116,23 @@ Sub vbaStocks_easy_main()
             ws.Range(sumTotalVolCol & summaryRow).Value = runningVolume
             ' set the yearly change to the suammry table
             ws.Range(sumYearlyChgCol & summaryRow).Value = yearlyChange
-
+            
+            ' format the yearly change cell. If > 0 green else if < 0 red.
+            If yearlyChange > 0 Then
+                ws.Range(sumYearlyChgCol & summaryRow).Interior.ColorIndex = 4
+                'ws.Range(sumOpenValCol & summaryRow).Value = "Green"
+            Else
+                ws.Range(sumYearlyChgCol & summaryRow).Interior.ColorIndex = 3
+                'ws.Range(sumOpenValCol & summaryRow).Value = "Red"
+            End If
+                        
             ' set the percent volume change to the Summary Table
             ws.Range(sumPercentCol & summaryRow).Value = percentChange
             ws.Range(sumPercentCol & summaryRow).NumberFormat = "0.00%"
-             
+          
             'debug set summary yearly open value and close value data
-            ws.Range(sumOpenValCol & summaryRow).Value = openValue
-            ws.Range(sumCloseValCol & summaryRow).Value = closeValue
+            'ws.Range(sumOpenValCol & summaryRow).Value = openValue
+            'ws.Range(sumCloseValCol & summaryRow).Value = closeValue
 
            ' Add one to the summary table row
             summaryRow = summaryRow + 1
@@ -138,6 +142,9 @@ Sub vbaStocks_easy_main()
         End If
 
     Next i
+
+    ' Autofit to display data
+    ws.Columns("A:N").AutoFit
 
 End Sub
 
@@ -172,8 +179,8 @@ Sub defOpenCloseColsByRef(ws As Worksheet, sumOpenValCol As String, sumCloseValC
     sumOpenValCol = "M"
     sumCloseValCol = "N"
     
-    ws.Range(sumOpenValCol & "1").Value = "Year Open Value"
-    ws.Range(sumCloseValCol & "1").Value = "Year Close Value"
+    'ws.Range(sumOpenValCol & "1").Value = "Year Open Value"
+    'ws.Range(sumCloseValCol & "1").Value = "Year Close Value"
     
 End Sub
 

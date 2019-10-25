@@ -76,20 +76,15 @@ Sub processVBAStockWorksheet(ws As Worksheet)
     'find the last row of values in the sheet
     Dim lastRow As Long
     lastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
-    'MsgBox "Last Row: [" & lastRow & "]"
 
-    ' set first opening value
-    openValue = ws.Cells(2, openCol)
-
-    ' Loop through all credit card purchases. First row is a new stock
+    ' first row of data is a new stock.  initialize the flag
     newStock = True
+
+    ' Loop through all stock daily rows. 
     For i = 2 To lastRow
 
         ' if new stock detected, set the tracking values
         If (newStock) Then
-            ' debug message to print previous and current row info
-            ' Call myDebugMsg1(ws, (i - 1), i)
-            
             ' Reset the summary & tracking values
             newStock = False
             runningVolume = 0
@@ -109,26 +104,26 @@ Sub processVBAStockWorksheet(ws As Worksheet)
 
         Else ' if this is final row for current stock ticker
         
-            ' Calculate summary values for current stock (runningValue, percentChange)
+        ' Calculate summary values for current stock (runningValue, percentChange)
             ' Add final row volume to the Running Volume Total
             runningVolume = runningVolume + ws.Cells(i, volCol).Value
             ' Calculate % change in volume
             closeValue = ws.Cells(i, closeCol)
             yearlyChange = closeValue - openValue
 
-            ' check for a div/0 error with open value
+            'check for a div/0 error with open value
             If (openValue <> 0) Then
-              ' open value ok.  calculate it
-              percentChange = yearlyChange / openValue
+                ' open value ok.  calculate %-change
+                percentChange = yearlyChange / openValue
             Else
-              'debug MsgBox "opening value is 0 for stock [" & tickerName & "]"
-              ' open value is 0. set percentChange to 0
-              percentChange = 0
+                ' MsgBox "opening value is 0 for stock [" & tickerName & "]"
+                ' opening value = 0, set %-change to 0 to avoid div/0 error
+                percentChange = 0
             End If
-            
-            'debug ' check for closeValue = 0
+             
+            'debug check for closeValue = 0
             'debug If (closeValue = 0) Then
-            'debug   MsgBox "closing value is 0 for stock [" & tickerName & "]"
+            'debug    MsgBox "closing value is 0 for stock [" & tickerName & "]"
             'debug End If
             
             ' set the TickerName in the Summary Table
@@ -137,14 +132,23 @@ Sub processVBAStockWorksheet(ws As Worksheet)
             ws.Range(sumTotalVolCol & summaryRow).Value = runningVolume
             ' set the yearly change to the suammry table
             ws.Range(sumYearlyChgCol & summaryRow).Value = yearlyChange
-
+            
+            ' format the yearly change cell. If > 0 green else if < 0 red.
+            If yearlyChange > 0 Then
+                ws.Range(sumYearlyChgCol & summaryRow).Interior.ColorIndex = 4
+                'ws.Range(sumOpenValCol & summaryRow).Value = "Green"
+            Else
+                ws.Range(sumYearlyChgCol & summaryRow).Interior.ColorIndex = 3
+                'ws.Range(sumOpenValCol & summaryRow).Value = "Red"
+            End If
+                        
             ' set the percent volume change to the Summary Table
             ws.Range(sumPercentCol & summaryRow).Value = percentChange
             ws.Range(sumPercentCol & summaryRow).NumberFormat = "0.00%"
-             
+          
             'debug set summary yearly open value and close value data
-            ws.Range(sumOpenValCol & summaryRow).Value = openValue
-            ws.Range(sumCloseValCol & summaryRow).Value = closeValue
+            'ws.Range(sumOpenValCol & summaryRow).Value = openValue
+            'ws.Range(sumCloseValCol & summaryRow).Value = closeValue
 
            ' Add one to the summary table row
             summaryRow = summaryRow + 1
@@ -155,6 +159,7 @@ Sub processVBAStockWorksheet(ws As Worksheet)
 
     Next i
 
+    '--------------  Greatest Change Challenge ----------------
     ' Calculate Great %Increase, Greates %Decrease, & Greatest total Volume
     'define the are cols and rows and set the header
     Dim greatIncRow As Integer
@@ -196,19 +201,23 @@ Sub processVBAStockWorksheet(ws As Worksheet)
     Dim valueMaxVol As Double
     Dim findRow As Long
 
-    'finding max values in range code form this post on mr excel
+    'using WorksheetFunction to calculate Min and Max values in range code 
+    ' from this post on mr excel
     ' https://www.mrexcel.com/forum/excel-questions/980012-how-can-i-return-row-number-maximum-value-range-vba.html
     ' WorksheetFunction.Max: https://docs.microsoft.com/en-us/office/vba/api/excel.worksheetfunction.max
     ' WorksheetFunctio.Match: https://docs.microsoft.com/en-us/office/vba/api/excel.worksheetfunction.match
     
+    ' use Max function on %-change to caluclate greatest % increase
     percMaxIncr = WorksheetFunction.Max(percIncRange)
     findRow = WorksheetFunction.Match(percMaxIncr, percIncRange, 0)
     tickerMaxIncr = sumTickerRange.Cells(findRow, 1)
     
+    ' use Min function on %-change to calculate greatest % decrease
     percMaxDecr = WorksheetFunction.Min(percIncRange)
     findRow = WorksheetFunction.Match(percMaxDecr, percIncRange, 0)
     tickerMaxDecr = sumTickerRange.Cells(findRow, 1)
     
+    ' use Max function on totalVolume to calculate greatest volume
     valueMaxVol = WorksheetFunction.Max(totalVolRange)
     findRow = WorksheetFunction.Match(valueMaxVol, totalVolRange, 0)
     tickerMaxVol = sumTickerRange.Cells(findRow, 1)
@@ -222,7 +231,9 @@ Sub processVBAStockWorksheet(ws As Worksheet)
     
     ws.Range(greatTickerCol & greatVolRow) = tickerMaxVol
     ws.Range(greatValueCol & greatVolRow) = valueMaxVol
-    
+
+' Autofit to display data
+    ws.Columns("A:" & greatValueCol).AutoFit
 End Sub
 
 ' Set the locations of elements of the sheet and summary tabeltable
@@ -256,8 +267,8 @@ Sub defOpenCloseColsByRef(ws As Worksheet, sumOpenValCol As String, sumCloseValC
     sumOpenValCol = "M"
     sumCloseValCol = "N"
     
-    ws.Range(sumOpenValCol & "1").Value = "Year Open Value"
-    ws.Range(sumCloseValCol & "1").Value = "Year Close Value"
+    'ws.Range(sumOpenValCol & "1").Value = "Year Open Value"
+    'ws.Range(sumCloseValCol & "1").Value = "Year Close Value"
     
 End Sub
 
@@ -265,9 +276,9 @@ Sub defGreatestAreaByRef(ws As Worksheet, _
         greatHdrCol As String, greatTickerCol As String, greatValueCol As String, _
         greatIncRow As Integer, greatDecRow As Integer, greatVolRow As Integer)
 
-    greatHdrCol = "P"
-    greatTickerCol = "Q"
-    greatValueCol = "R"
+    greatHdrCol = "O"
+    greatTickerCol = "P"
+    greatValueCol = "Q"
     greatIncRow = 2
     greatDecRow = 3
     greatVolRow = 4

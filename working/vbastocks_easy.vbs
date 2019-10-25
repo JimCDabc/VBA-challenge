@@ -47,25 +47,18 @@ Sub vbaStocks_easy_main()
     Dim runningVolume As Double     ' running total for volume
     Dim percentChange As Double
     
-    newStock = True
-
     'find the last row of values in the sheet
     Dim lastRow As Long
     lastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
-    'MsgBox "Last Row: [" & lastRow & "]"
 
-    ' set first opening value
-    'openValue = ws.Cells(2, openCol)
+    ' first row of data is a new stock.  initialize the flag
+    newStock = True
 
-    ' Loop through all credit card purchases
+    ' Loop through all stock daily rows. 
     For i = 2 To lastRow
 
         ' if new stock detected, set the tracking values
         If (newStock) Then
-            ' debug message to print precious and current row info
-            ' Call myDebugMsg1(ws, (i - 1), i)
-            
-            
             ' Reset the summary & tracking values
             newStock = False
             runningVolume = 0
@@ -175,8 +168,4 @@ Sub myDebugMsg1(ws As Worksheet, ByVal prevRow As Long, ByVal curRow As Long)
                 & " | " & Str(ws.Cells(curRow, 7))
     End If
 End Sub
-
-
-
-
 
