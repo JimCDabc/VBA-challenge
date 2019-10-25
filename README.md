@@ -1,6 +1,10 @@
 # VBA-challenge
 
+## heading 2
+
 Github repository for DABC week 2 VBA homework for Jim C
+
+### heading 3
 
 * VBA-Challenge / VBStocks directory - contains deliverbles for DABC week 2 homework
   * vbastocks_easy.vbs:  Script for easy solution
