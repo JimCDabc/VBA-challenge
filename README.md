@@ -15,8 +15,8 @@ Contains deliverbles for DABC week 2 homework
 
 ### Directory: VBA-Challenge / working
 
-Working area for the homework.  Not for grading
-
+Working area for the homework.  
+Not for grading
 When complete these scripts are moved to the VBAStocks deliverables folder for grading
 
 ### Directory: VBA-Challenge / test
