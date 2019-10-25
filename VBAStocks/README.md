@@ -1,4 +1,4 @@
-# VBA-challenge git Repository
+# VBA-challenge Git Repository
 
 Github repository for DABC week 2 VBA homework for Jim C
 
@@ -15,8 +15,8 @@ Contains deliverbles for DABC week 2 homework
 #### ./Images sub-directory
 
 All images reflect runs on Multiple_year_stock_data.xlsx.  
-Filenames marke by "easy", "moderate", and "hard" challenges
-Some images reflect top of sheet.  others reflect end of data of sheet.
+Filenames marked by "easy", "moderate", and "hard" challenges.
+Some images reflect top of sheet.  Others reflect end of data of sheet.
 
 * Easy
   * vbastocks_easy_2016_top.png:  Easy challenge. Top of 2016 sheet
